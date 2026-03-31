@@ -31,7 +31,7 @@ const invoiceSchema = new mongoose.Schema({
 const Invoice = mongoose.model('Invoice', invoiceSchema);
 
 // Routes
-app.get('/invoices', async (req, res) => {
+app.get('/api/products', async (req, res) => {
   try {
     const invoices = await Invoice.find();
     res.json(invoices);
@@ -40,7 +40,7 @@ app.get('/invoices', async (req, res) => {
   }
 });
 
-app.post('/invoices', async (req, res) => {
+app.post('/api/products', async (req, res) => {
   try {
     const invoice = new Invoice(req.body);
     await invoice.save();
