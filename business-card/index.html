@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="JD | R Export House - Digital Business Card">
+    <meta name="theme-color" content="#0D0D0D">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="JD - R Export House">
+    <title>JD | R Export House - Business Card</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Montserrat:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%23C8A96E' width='100' height='100'/><text x='50' y='70' font-size='60' font-weight='bold' text-anchor='middle' fill='%230D0D0D' font-family='serif'>JD</text></svg>">
+    <style>
+        *, *::before, *::after { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+        }
+
+        :root {
+            --gold: #C8A96E;
+            --gold-light: #E8C98A;
+            --gold-dark: #9A7A45;
+            --ink: #0D0D0D;
+            --cream: #F8F3EC;
+            --smoke: #E8E2D8;
+            --safe-area-inset-top: env(safe-area-inset-top);
+            --safe-area-inset-bottom: env(safe-area-inset-bottom);
+        }
+
+        html, body {
+            min-height: 100vh;
+            height: 100vh;
+            background: var(--ink);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: 
+                radial-gradient(ellipse 80% 60% at 20% 20%, rgba(200,169,110,0.07) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 80% at 80% 80%, rgba(200,169,110,0.05) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .card-container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            height: 100%;
+            max-width: 100%;
+            padding: max(20px, var(--safe-area-inset-top)) 16px max(40px, var(--safe-area-inset-bottom));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .card {
+            background: var(--cream);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 32px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(200,169,110,0.25);
+            animation: riseIn 0.9s cubic-bezier(0.22,1,0.36,1) both;
+            width: 100%;
+            max-width: 420px;
+            flex-shrink: 0;
+        }
+
+        @keyframes riseIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(40px) scale(0.97); 
+            }
+            to { 
+                opacity: 1; 
+                transform: none; 
+            }
+        }
+
+        /* Header */
+        .card-header {
+            background: var(--ink);
+            padding: 32px 28px 28px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-header::before {
+            content: '';
+            position: absolute;
+            top: -60px; 
+            right: -60px;
+            width: 220px; 
+            height: 220px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(200,169,110,0.18) 0%, transparent 70%);
+        }
+
+        .card-header::after {
+            content: 'REH';
+            position: absolute;
+            bottom: -18px; 
+            right: 20px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 96px;
+            font-weight: 300;
+            color: rgba(200,169,110,0.07);
+            letter-spacing: -4px;
+            user-select: none;
+            pointer-events: none;
+        }
+
+        .nfc-chip {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            margin-bottom: 22px;
+        }
+
+        .nfc-dot {
+            width: 28px; 
+            height: 18px;
+            border: 2px solid var(--gold);
+            border-radius: 4px;
+            position: relative;
+            opacity: 0.7;
+        }
+
+        .nfc-dot::before {
+            content: '';
+            position: absolute;
+            top: 3px; 
+            left: 3px;
+            right: 3px; 
+            bottom: 3px;
+            border: 1.5px solid var(--gold);
+            border-radius: 2px;
+            opacity: 0.5;
+        }
+
+        .nfc-label {
+            font-size: 9px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gold);
+            opacity: 0.7;
+            font-weight: 500;
+        }
+
+        .company-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 34px;
+            font-weight: 600;
+            color: var(--cream);
+            line-height: 1.0;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .company-sub {
+            font-size: 9px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--gold);
+            font-weight: 400;
+            margin-bottom: 20px;
+        }
+
+        .divider-gold {
+            height: 1px;
+            background: linear-gradient(90deg, var(--gold), transparent);
+            margin-bottom: 18px;
+            opacity: 0.5;
+        }
+
+        .person-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 22px;
+            font-weight: 400;
+            font-style: italic;
+            color: var(--cream);
+            line-height: 1.1;
+        }
+
+        .person-nick {
+            display: inline-block;
+            margin-top: 4px;
+            font-size: 9px;
+            letter-spacing: 3.5px;
+            text-transform: uppercase;
+            color: var(--gold);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+        }
+
+        /* Deals Section */
+        .deals-section {
+            padding: 20px 28px 16px;
+            background: var(--cream);
+            border-bottom: 1px solid var(--smoke);
+        }
+
+        .deals-label {
+            font-size: 8px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gold-dark);
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .deals-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+        }
+
+        .deal-tag {
+            background: var(--ink);
+            color: var(--cream);
+            font-size: 9.5px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            padding: 5px 11px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            animation: tagPop 0.5s cubic-bezier(0.22,1,0.36,1) both;
+        }
+
+        .deal-tag:nth-child(1) { animation-delay: 0.15s; }
+        .deal-tag:nth-child(2) { animation-delay: 0.22s; }
+        .deal-tag:nth-child(3) { animation-delay: 0.29s; }
+        .deal-tag:nth-child(4) { animation-delay: 0.36s; }
+        .deal-tag:nth-child(5) { animation-delay: 0.43s; }
+        .deal-tag:nth-child(6) { animation-delay: 0.50s; }
+
+        @keyframes tagPop {
+            from { 
+                opacity: 0; 
+                transform: scale(0.85); 
+            }
+            to { 
+                opacity: 1; 
+                transform: none; 
+            }
+        }
+
+        /* Contact Section */
+        .contact-section {
+            padding: 18px 28px 22px;
+            background: var(--cream);
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .contact-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            text-decoration: none;
+            color: inherit;
+            transition: opacity 0.2s;
+            border-radius: 12px;
+            padding: 8px;
+            margin: -8px;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .contact-row:active { 
+            opacity: 0.7; 
+        }
+
+        .contact-icon {
+            width: 34px; 
+            height: 34px;
+            background: var(--ink);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .contact-icon svg { 
+            width: 16px; 
+            height: 16px; 
+        }
+
+        .contact-text {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .contact-label {
+            font-size: 8px;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--gold-dark);
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .contact-value {
+            font-size: 13px;
+            font-weight: 400;
+            color: var(--ink);
+            line-height: 1.4;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            padding: 0 28px 16px;
+            background: var(--cream);
+            display: flex;
+            gap: 10px;
+            flex-direction: column;
+        }
+
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 16px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            -webkit-tap-highlight-color: transparent;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: var(--ink);
+        }
+
+        .btn-primary:active {
+            filter: brightness(0.95);
+        }
+
+        .btn-secondary {
+            background: var(--ink);
+            color: var(--cream);
+            border: 1.5px solid var(--gold);
+        }
+
+        .btn-secondary:active {
+            background: rgba(200,169,110,0.1);
+        }
+
+        .btn-icon {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Footer */
+        .card-footer {
+            background: var(--ink);
+            padding: 14px 28px 18px;
+            border-top: 1px solid rgba(200,169,110,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .footer-brand {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 13px;
+            color: rgba(248,243,236,0.4);
+            letter-spacing: 1px;
+        }
+
+        .footer-geo {
+            font-size: 9px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--gold);
+            opacity: 0.6;
+            text-align: right;
+            line-height: 1.3;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: var(--gold);
+            color: var(--ink);
+            padding: 14px 16px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
+            animation: slideUp 0.3s ease-out;
+            z-index: 1000;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .card {
+                border-radius: 16px;
+            }
+
+            .company-name {
+                font-size: 28px;
+            }
+
+            .person-name {
+                font-size: 18px;
+            }
+        }
+
+        /* Safe area support for notched devices */
+        @supports (padding: max(0px)) {
+            body {
+                padding-top: max(20px, env(safe-area-inset-top));
+                padding-bottom: max(20px, env(safe-area-inset-bottom));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="card-container">
+        <div class="card">
+
+            <!-- Header -->
+            <div class="card-header">
+                <div class="nfc-chip">
+                    <div class="nfc-dot"></div>
+                    <span class="nfc-label">Digital Card</span>
+                </div>
+
+                <div class="company-name">R Export House</div>
+                <div class="company-sub">Global Trade &amp; Exports</div>
+                <div class="divider-gold"></div>
+
+                <div class="person-name">Jagandeep Singh Sachdeva</div>
+                <div class="person-nick">JD &nbsp;·&nbsp; Founder &amp; Director</div>
+            </div>
+
+            <!-- Deals -->
+            <div class="deals-section">
+                <div class="deals-label">Deals In</div>
+                <div class="deals-grid">
+                    <span class="deal-tag">Furniture</span>
+                    <span class="deal-tag">Surgicals</span>
+                    <span class="deal-tag">Medical Equipment</span>
+                    <span class="deal-tag">Glasses</span>
+                    <span class="deal-tag">Packaging</span>
+                    <span class="deal-tag">+ Many More</span>
+                </div>
+            </div>
+
+            <!-- Contacts -->
+            <div class="contact-section">
+
+                <a class="contact-row" href="tel:+919837000150">
+                    <div class="contact-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#C8A96E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.15 1.18 2 2 0 012.13 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92v2z"/>
+                        </svg>
+                    </div>
+                    <div class="contact-text">
+                        <span class="contact-label">Mobile / WhatsApp</span>
+                        <span class="contact-value">+91 98370 00150</span>
+                    </div>
+                </a>
+
+                <a class="contact-row" href="mailto:jagansachdeva01@gmail.com">
+                    <div class="contact-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#C8A96E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                            <polyline points="22,6 12,13 2,6"/>
+                        </svg>
+                    </div>
+                    <div class="contact-text">
+                        <span class="contact-label">Email</span>
+                        <span class="contact-value">jagansachdeva01@gmail.com</span>
+                    </div>
+                </a>
+
+                <div class="contact-row">
+                    <div class="contact-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#C8A96E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+                            <circle cx="12" cy="10" r="3"/>
+                        </svg>
+                    </div>
+                    <div class="contact-text">
+                        <span class="contact-label">Address</span>
+                        <span class="contact-value">10/485 Prem Vihar Colony<br>Aligarh – 202001 (UP) INDIA</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="saveContact()" title="Save contact to your phone">
+                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                        <polyline points="17 21 17 13 7 13 7 21"/>
+                        <polyline points="7 3 7 8 15 8"/>
+                    </svg>
+                    Save Contact
+                </button>
+
+                <a href="https://wa.me/919837000150?text=Hi%20JD%2C%20I%20found%20your%20business%20card%20online!" class="btn btn-secondary" title="Start WhatsApp conversation">
+                    <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.67-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.076 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421-7.403h-.004a9.87 9.87 0 00-4.946 1.266l-.355.192-.368-.061 1.401-5.115.946 1.659c.396.656.972 1.159 1.665 1.459l.355.177v-.002.006zm0-2a11.979 11.979 0 00-11.976 12c0 2.714.857 5.289 2.428 7.423L1.102 23.5l2.905-1.74c2.052 1.362 4.538 2.14 7.169 2.14 6.627 0 12-5.373 12-12s-5.373-12-12-12z"/>
+                    </svg>
+                    WhatsApp
+                </a>
+            </div>
+
+            <!-- Footer -->
+            <div class="card-footer">
+                <div class="footer-brand">R Export House</div>
+                <div class="footer-geo">Aligarh · UP<br>India</div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function saveContact() {
+            const vcard = `BEGIN:VCARD
+VERSION:3.0
+FN:Jagandeep Singh Sachdeva
+N:Sachdeva;Jagandeep;Singh;;
+NICKNAME:JD
+ORG:R Export House
+TITLE:Founder & Director
+TEL;TYPE=CELL,VOICE:+919837000150
+TEL;TYPE=CELL,WHATSAPP:+919837000150
+EMAIL:jagansachdeva01@gmail.com
+ADR;TYPE=WORK:;;10/485 Prem Vihar Colony\\, Near GD Public School;Aligarh;UP;202001;India
+NOTE:Deals in: Furniture\\, Surgicals\\, Medical Equipment\\, Glasses\\, Packaging & More
+END:VCARD`;
+
+            try {
+                const blob = new Blob([vcard], { type: 'text/vcard' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'JD_RExportHouse.vcf';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+                showToast('Contact saved successfully!');
+            } catch (error) {
+                console.error('Error saving contact:', error);
+                showToast('Error saving contact. Try again!');
+            }
+        }
+
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideUp 0.3s ease-out reverse';
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 300);
+            }, 2000);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Business card loaded');
+        });
+    </script>
+</body>
+</html>
