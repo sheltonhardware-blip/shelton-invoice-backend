@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JD | R Export House - Digital Card</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Montserrat:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --gold: #C8A96E;
+    --gold-light: #E8C98A;
+    --gold-dark: #9A7A45;
+    --ink: #0D0D0D;
+    --cream: #F8F3EC;
+    --smoke: #E8E2D8;
+  }
+
+  html, body {
+    min-height: 100vh;
+    background: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Montserrat', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* Subtle animated bg */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: 
+      radial-gradient(ellipse 80% 60% at 20% 20%, rgba(200,169,110,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 80% at 80% 80%, rgba(200,169,110,0.05) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 500px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    align-items: center;
+  }
+
+  /* QR Code Section */
+  .qr-generator {
+    background: var(--cream);
+    border-radius: 24px;
+    padding: 40px 30px;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(200,169,110,0.25);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    animation: riseIn 0.9s cubic-bezier(0.22,1,0.36,1) both;
+  }
+
+  @keyframes riseIn {
+    from { opacity: 0; transform: translateY(40px) scale(0.97); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  .qr-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--ink);
+    text-align: center;
+    line-height: 1.2;
+  }
+
+  .qr-subtitle {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold-dark);
+    font-weight: 600;
+    text-align: center;
+  }
+
+  .qr-code-box {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  }
+
+  #qrcode {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #qrcode canvas, #qrcode img {
+    width: 200px !important;
+    height: 200px !important;
+  }
+
+  .qr-instruction {
+    font-size: 11px;
+    color: var(--gold-dark);
+    text-align: center;
+    line-height: 1.6;
+    max-width: 100%;
+  }
+
+  .qr-actions {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .action-btn {
+    flex: 1;
+    padding: 12px;
+    border: 2px solid var(--gold);
+    background: transparent;
+    color: var(--gold);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .action-btn:hover {
+    background: var(--gold);
+    color: var(--ink);
+  }
+
+  .action-btn.primary {
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    color: var(--ink);
+    border: 2px solid var(--gold);
+  }
+
+  .action-btn.primary:hover {
+    filter: brightness(1.1);
+  }
+
+  /* Card Preview Section */
+  .card-wrap {
+    width: 100%;
+    max-width: 420px;
+    padding: 0;
+  }
+
+  .card {
+    background: var(--cream);
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(200,169,110,0.25);
+    animation: riseIn 0.9s cubic-bezier(0.22,1,0.36,1) both;
+  }
+
+  /* ── Header band ── */
+  .card-header {
+    background: var(--ink);
+    padding: 32px 28px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card-header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 220px; height: 220px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(200,169,110,0.18) 0%, transparent 70%);
+  }
+
+  .card-header::after {
+    content: 'REH';
+    position: absolute;
+    bottom: -18px; right: 20px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 96px;
+    font-weight: 300;
+    color: rgba(200,169,110,0.07);
+    letter-spacing: -4px;
+    user-select: none;
+  }
+
+  .nfc-chip {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-bottom: 22px;
+  }
+
+  .nfc-dot {
+    width: 28px; height: 18px;
+    border: 2px solid var(--gold);
+    border-radius: 4px;
+    position: relative;
+    opacity: 0.7;
+  }
+  .nfc-dot::before {
+    content: '';
+    position: absolute;
+    top: 3px; left: 3px;
+    right: 3px; bottom: 3px;
+    border: 1.5px solid var(--gold);
+    border-radius: 2px;
+    opacity: 0.5;
+  }
+
+  .nfc-label {
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    opacity: 0.7;
+    font-weight: 500;
+  }
+
+  .company-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 34px;
+    font-weight: 600;
+    color: var(--cream);
+    line-height: 1.0;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+
+  .company-sub {
+    font-size: 9px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 400;
+    margin-bottom: 20px;
+  }
+
+  .divider-gold {
+    height: 1px;
+    background: linear-gradient(90deg, var(--gold), transparent);
+    margin-bottom: 18px;
+    opacity: 0.5;
+  }
+
+  .person-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--cream);
+    line-height: 1.1;
+  }
+
+  .person-nick {
+    display: inline-block;
+    margin-top: 4px;
+    font-size: 9px;
+    letter-spacing: 3.5px;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+  }
+
+  /* ── Deals section ── */
+  .deals-section {
+    padding: 20px 28px 16px;
+    background: var(--cream);
+    border-bottom: 1px solid var(--smoke);
+  }
+
+  .deals-label {
+    font-size: 8px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold-dark);
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+
+  .deals-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+  }
+
+  .deal-tag {
+    background: var(--ink);
+    color: var(--cream);
+    font-size: 9.5px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    padding: 5px 11px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    animation: tagPop 0.5s cubic-bezier(0.22,1,0.36,1) both;
+  }
+
+  .deal-tag:nth-child(1) { animation-delay: 0.15s; }
+  .deal-tag:nth-child(2) { animation-delay: 0.22s; }
+  .deal-tag:nth-child(3) { animation-delay: 0.29s; }
+  .deal-tag:nth-child(4) { animation-delay: 0.36s; }
+  .deal-tag:nth-child(5) { animation-delay: 0.43s; }
+  .deal-tag:nth-child(6) { animation-delay: 0.50s; }
+
+  @keyframes tagPop {
+    from { opacity: 0; transform: scale(0.85); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  /* ── Contact section ── */
+  .contact-section {
+    padding: 18px 28px 22px;
+    background: var(--cream);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .contact-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    text-decoration: none;
+    color: inherit;
+    transition: opacity 0.2s;
+  }
+
+  .contact-row:hover { opacity: 0.7; }
+
+  .contact-icon {
+    width: 34px; height: 34px;
+    background: var(--ink);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .contact-icon svg { width: 16px; height: 16px; }
+
+  .contact-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .contact-label {
+    font-size: 8px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--gold-dark);
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+
+  .contact-value {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--ink);
+    line-height: 1.4;
+  }
+
+  /* ── QR Section on Card ── */
+  .card-qr-section {
+    margin: 0 28px 24px;
+    background: var(--ink);
+    border-radius: 16px;
+    padding: 18px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+
+  .card-qr-box {
+    background: white;
+    border-radius: 10px;
+    padding: 8px;
+    flex-shrink: 0;
+    width: 96px;
+    height: 96px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #cardQrCode canvas, #cardQrCode img {
+    width: 80px !important;
+    height: 80px !important;
+  }
+
+  .card-qr-text {
+    flex: 1;
+  }
+
+  .card-qr-headline {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--cream);
+    line-height: 1.2;
+    margin-bottom: 5px;
+  }
+
+  .card-qr-sub {
+    font-size: 10px;
+    color: var(--gold);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 400;
+    line-height: 1.5;
+  }
+
+  /* ── Footer ── */
+  .card-footer {
+    background: var(--ink);
+    padding: 14px 28px 18px;
+    border-top: 1px solid rgba(200,169,110,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .footer-brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    color: rgba(248,243,236,0.4);
+    letter-spacing: 1px;
+  }
+
+  .footer-geo {
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--gold);
+    opacity: 0.6;
+    text-align: right;
+  }
+
+  /* Save contact btn */
+  .save-btn {
+    display: block;
+    text-align: center;
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    color: var(--ink);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 14px;
+    border-radius: 0 0 24px 24px;
+    cursor: pointer;
+    border: none;
+    width: 100%;
+    transition: filter 0.2s;
+  }
+
+  .save-btn:hover { filter: brightness(1.1); }
+
+  .section-divider {
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin: 20px 0;
+    opacity: 0.3;
+  }
+
+  .text-center {
+    text-align: center;
+  }
+
+  .text-muted {
+    color: var(--gold-dark);
+    font-size: 9px;
+    letter-spacing: 1px;
+  }
+
+  @media (max-width: 600px) {
+    .container {
+      max-width: 100%;
+    }
+
+    .qr-code-box {
+      padding: 15px;
+    }
+
+    #qrcode canvas, #qrcode img {
+      width: 160px !important;
+      height: 160px !important;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- QR Code Generator Section -->
+  <div class="qr-generator">
+    <div class="qr-title">R Export House<br>Digital Card</div>
+    <div class="qr-subtitle">Scan to Access Full Card</div>
+    
+    <div class="qr-code-box">
+      <div id="qrcode"></div>
+    </div>
+
+    <div class="qr-instruction">
+      📱 Scan this QR code with any smartphone to access the complete digital business card with all contact information and links
+    </div>
+
+    <div class="qr-actions">
+      <button class="action-btn primary" onclick="downloadQR()">⬇ Download QR</button>
+      <button class="action-btn" onclick="copyLink()">🔗 Copy Link</button>
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- Card Preview -->
+  <div style="width: 100%; text-align: center; margin-bottom: 10px;">
+    <div class="text-muted">↓ CARD PREVIEW ↓</div>
+  </div>
+
+  <div class="card-wrap">
+    <div class="card">
+
+      <!-- Header -->
+      <div class="card-header">
+        <div class="nfc-chip">
+          <div class="nfc-dot"></div>
+          <span class="nfc-label">NFC Digital Card</span>
+        </div>
+
+        <div class="company-name">R Export House</div>
+        <div class="company-sub">Global Trade &amp; Exports</div>
+        <div class="divider-gold"></div>
+
+        <div class="person-name">Jagandeep Singh Sachdeva</div>
+        <div class="person-nick">JD &nbsp;·&nbsp; Founder &amp; Director</div>
+      </div>
+
+      <!-- Deals -->
+      <div class="deals-section">
+        <div class="deals-label">Deals In</div>
+        <div class="deals-grid">
+          <span class="deal-tag">Furniture</span>
+          <span class="deal-tag">Surgicals</span>
+          <span class="deal-tag">Medical Equipment</span>
+          <span class="deal-tag">Glasses</span>
+          <span class="deal-tag">Packaging</span>
+          <span class="deal-tag">+ Many More</span>
+        </div>
+      </div>
+
+      <!-- Contacts -->
+      <div class="contact-section">
+
+        <a class="contact-row" href="tel:+919837000150">
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#C8A96E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.15 1.18 2 2 0 012.13 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92v2z"/>
+            </svg>
+          </div>
+          <div class="contact-text">
+            <span class="contact-label">Mobile / WhatsApp</span>
+            <span class="contact-value">+91 98370 00150</span>
+          </div>
+        </a>
+
+        <a class="contact-row" href="mailto:jagansachdeva01@gmail.com">
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#C8A96E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+              <polyline points="22,6 12,13 2,6"/>
+            </svg>
+          </div>
+          <div class="contact-text">
+            <span class="contact-label">Email</span>
+            <span class="contact-value">jagansachdeva01@gmail.com</span>
+          </div>
+        </a>
+
+        <div class="contact-row">
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#C8A96E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+          </div>
+          <div class="contact-text">
+            <span class="contact-label">Address</span>
+            <span class="contact-value">10/485 Prem Vihar Colony, Near GD Public School<br>Aligarh – 202001 (UP) INDIA</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- QR Code -->
+      <div class="card-qr-section">
+        <div class="card-qr-box">
+          <div id="cardQrCode"></div>
+        </div>
+        <div class="card-qr-text">
+          <div class="card-qr-headline">Scan to Call<br>&amp; Connect</div>
+          <div class="card-qr-sub">WhatsApp · Call · Email<br>Instant Access</div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="card-footer">
+        <div class="footer-brand">R Export House</div>
+        <div class="footer-geo">Aligarh · UP<br>India</div>
+      </div>
+
+      <!-- Save Contact -->
+      <button class="save-btn" onclick="saveContact()">⬇ Save Contact</button>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // Get the current page URL
+  const cardUrl = window.location.origin + window.location.pathname;
+
+  // Generate main QR code (pointing to this page)
+  new QRCode(document.getElementById("qrcode"), {
+    text: cardUrl,
+    width: 200,
+    height: 200,
+    colorDark: "#0D0D0D",
+    colorLight: "#ffffff",
+    correctLevel: QRCode.CorrectLevel.H
+  });
+
+  // Generate card QR code (for WhatsApp)
+  new QRCode(document.getElementById("cardQrCode"), {
+    text: "https://wa.me/919837000150",
+    width: 80,
+    height: 80,
+    colorDark: "#0D0D0D",
+    colorLight: "#ffffff",
+    correctLevel: QRCode.CorrectLevel.H
+  });
+
+  // Download QR code as image
+  function downloadQR() {
+    const canvas = document.querySelector('#qrcode canvas');
+    if (canvas) {
+      const link = document.createElement('a');
+      link.href = canvas.toDataURL('image/png');
+      link.download = 'RExportHouse_QR_Code.png';
+      link.click();
+    }
+  }
+
+  // Copy link to clipboard
+  function copyLink() {
+    navigator.clipboard.writeText(cardUrl).then(() => {
+      alert('Card link copied to clipboard!');
+    }).catch(() => {
+      alert('Failed to copy link');
+    });
+  }
+
+  // Save contact as vCard
+  function saveContact() {
+    const vcard = `BEGIN:VCARD
+VERSION:3.0
+FN:Jagandeep Singh Sachdeva
+N:Sachdeva;Jagandeep;Singh;;
+NICKNAME:JD
+ORG:R Export House
+TITLE:Founder & Director
+TEL;TYPE=CELL,VOICE:+919837000150
+TEL;TYPE=CELL,WHATSAPP:+919837000150
+EMAIL:jagansachdeva01@gmail.com
+ADR;TYPE=WORK:;;10/485 Prem Vihar Colony\\, Near GD Public School;Aligarh;UP;202001;India
+NOTE:Deals in: Furniture\\, Surgicals\\, Medical Equipment\\, Glasses\\, Packaging & More
+END:VCARD`;
+
+    const blob = new Blob([vcard], { type: 'text/vcard' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'JD_RExportHouse.vcf';
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+</script>
+</body>
+</html>
